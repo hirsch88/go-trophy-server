@@ -1,1 +1,1 @@
-web: go-trophy-server
+web: bin/go-trophy-server
