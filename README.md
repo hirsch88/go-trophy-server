@@ -1,4 +1,4 @@
-# :trophy: Go-Trophy Server [![Build Status](https://travis-ci.org/hirsch88/go-trophy.svg?branch=master)](https://travis-ci.org/hirsch88/go-trophy)
+# :trophy: Go-Trophy Server [![CircleCI](https://circleci.com/gh/hirsch88/go-trophy-server.svg?style=svg)](https://circleci.com/gh/hirsch88/go-trophy-server)
 
 ## ❯ Why
 
