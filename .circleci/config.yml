@@ -8,3 +8,5 @@ jobs:
       - checkout
       - run: cp .env.example .env
       - run: make install
+      - run: make mock
+      - run: make test
