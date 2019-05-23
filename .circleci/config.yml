@@ -6,3 +6,4 @@ jobs:
     working_directory: /go/src/github.com/hirsch88/go-trophy-server
     steps:
       - checkout
+      - run: make install
