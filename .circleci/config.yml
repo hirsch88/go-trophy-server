@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.12
-    working_directory: /go/src/github.com/hirsch88/ggo-trophy-server
+    working_directory: /go/src/github.com/hirsch88/go-trophy-server
     steps:
       - checkout
       - run: cp .env.example .env
