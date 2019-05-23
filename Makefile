@@ -4,7 +4,7 @@ export
 install:
 	@echo "Installing Glide and locked dependencies..."
 	glide --version || go get -u -f github.com/Masterminds/glide
-	glide install -v
+	glide install
 
 mock:
 	@echo "Generating mocks..."
