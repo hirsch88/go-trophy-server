@@ -31,3 +31,4 @@ import:
 - package: github.com/wantedly/gorm-zap
 - package: github.com/cnjack/throttle
 - package: github.com/aviddiviner/gin-limit
+- package: github.com/gin-contrib/sse
