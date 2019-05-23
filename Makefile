@@ -3,17 +3,17 @@ export
 
 install:
 	@echo "Installing Glide and locked dependencies..."
-	glide --version || go get -u -f github.com/Masterminds/glide
-	glide install
+	glide --version || go get -u -v -t github.com/Masterminds/glide
+	glide install -v
 
 mock:
 	@echo "Generating mocks..."
-	mockery --version || go get -u -f github.com/vektra/mockery/.../
+	mockery --version || go get -u -v -t github.com/vektra/mockery/.../
 	mockery -dir=./app -recursive=true -all
 
 test:
 	@echo "Running unit tests..."
-	go test -v ./app/...
+	go test -v ./...
 
 run:
 	@echo "Running application..."
