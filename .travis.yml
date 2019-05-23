@@ -1,0 +1,15 @@
+language: go
+sudo: false
+go:
+  - 1.12.x
+cache:
+  directories:
+    - vendor
+before_install:
+  - cp .env.example .env
+install:
+  - make install
+before_script:
+  - make mock
+script:
+  - make test

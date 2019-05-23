@@ -1,0 +1,42 @@
+hash: 805883a1a568cee33502310b5fd1b99e8fcd8ff8bb3ebac9e679764fdb643ce1
+updated: 2019-05-23T20:46:02.655552+02:00
+imports:
+- name: github.com/aviddiviner/gin-limit
+  version: 43b5f79762c10a62aab8323f9fc45b87e784625f
+- name: github.com/cnjack/throttle
+  version: 525175b56e18aa4549190ed3a1a77c66925b9cef
+- name: github.com/danielkov/gin-helmet
+  version: 1387e224435edcb84dfc4bfc81fe56fc807ca98b
+- name: github.com/gin-contrib/cors
+  version: 5f50d4fb4e0306dcacc6f8e9bea2dcee784dbbdf
+- name: github.com/gin-contrib/gzip
+  version: b07653c4b4b188bf0af293ae44b72e7ac9623a17
+- name: github.com/gin-contrib/static
+  version: c1cdf9c9ec7b10ddff982ab3814ae4dd778e36a4
+- name: github.com/gin-contrib/zap
+  version: 7c4b822813e784f478d682267af095a92e13f1e2
+- name: github.com/gin-gonic/gin
+  version: b75d67cd51eb53c3c3a2fc406524c940021ffbda
+- name: github.com/jinzhu/gorm
+  version: b7156195f7f3415f97c20abbd6aff894b847fee8
+  subpackages:
+  - dialects/mysql
+- name: github.com/joho/godotenv
+  version: 23d116af351c84513e1946b527c88823e476be13
+- name: github.com/stretchr/testify
+  version: ffdc059bfe9ce6a4e144ba849dbedead332c6053
+  subpackages:
+  - mock
+- name: github.com/thinkerou/favicon
+  version: 94a442a49da6e2d44bdd5e0d2e2e185c43a19d93
+- name: github.com/vektra/mockery
+  version: e78b021dcbb558a8e7ac1fc5bc757ad7c277bb81
+- name: github.com/wantedly/gorm-zap
+  version: 372d3517a8765add76f351e583b651f841366859
+- name: go.uber.org/dig
+  version: 7ff117f761a3f1b3eb521945c17a1091438eb6de
+- name: go.uber.org/fx
+  version: 3de044da969b90ad0a3e4a7867a74662f645f3f9
+- name: go.uber.org/zap
+  version: 27376062155ad36be76b0f12cf1572a221d3a48c
+testImports: []
