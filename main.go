@@ -1,5 +1,5 @@
 /**
- * Go-Trophy
+ * Go-Trophy Server
  *
  * @author   Gery Hirschfeld (hirsch88)
  */
