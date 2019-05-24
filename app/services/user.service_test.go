@@ -2,6 +2,8 @@ package services
 
 import (
 	"github.com/hirsch88/go-trophy-server/app/models"
+	"github.com/hirsch88/go-trophy-server/app/providers"
+	"github.com/hirsch88/go-trophy-server/config"
 	"github.com/hirsch88/go-trophy-server/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -16,11 +18,12 @@ func testSetup(t *testing.T) (UserService, models.User) {
 
 	var mailProviderMock = new(mocks.MailProvider)
 	var userRepositoryMock = new(mocks.UserRepository)
+	var logProvider = providers.NewLoggerProvider(config.NewAppConfig())
 
 	userRepositoryMock.On("Create", mock.Anything).Return(user)
 	mailProviderMock.On("Send", mock.Anything, mock.Anything).Return(true)
 
-	var service = NewUserService(userRepositoryMock, mailProviderMock)
+	var service = NewUserService(userRepositoryMock, mailProviderMock, logProvider)
 	return service, user
 }
 
