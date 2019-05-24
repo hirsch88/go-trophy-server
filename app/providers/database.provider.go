@@ -11,7 +11,7 @@ import (
 
 type databaseProvider struct {
 	config *config.DatabaseConfig
-	log *zap.SugaredLogger
+	log    *zap.SugaredLogger
 }
 
 func (p *databaseProvider) Connect() *gorm.DB {
@@ -22,16 +22,21 @@ func (p *databaseProvider) Connect() *gorm.DB {
 		panic("failed to connect database")
 	}
 
-	if err = db.DB().Ping(); err != nil {
-		panic(err)
-	}
-
 	db.LogMode(p.config.LogMode)
 	db.SetLogger(gormzap.New(p.log.Desugar()))
 	db.DB().SetMaxIdleConns(p.config.IdleConnections)
 	db.DB().SetMaxOpenConns(p.config.OpenConnections)
 
 	return db
+}
+
+func (p *databaseProvider) Ping() {
+	db := p.Connect()
+	defer db.Close()
+
+	if err := db.DB().Ping(); err != nil {
+		panic(err)
+	}
 }
 
 func (p *databaseProvider) Migrate() {
@@ -44,6 +49,7 @@ func (p *databaseProvider) Migrate() {
 
 type DatabaseProvider interface {
 	Connect() *gorm.DB
+	Ping()
 	Migrate()
 }
 

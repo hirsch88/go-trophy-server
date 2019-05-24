@@ -4,7 +4,6 @@ import (
 	"github.com/hirsch88/go-trophy-server/app/mail"
 	"github.com/hirsch88/go-trophy-server/config"
 	"go.uber.org/zap"
-	"log"
 )
 
 type mailProvider struct {
@@ -15,10 +14,11 @@ type mailProvider struct {
 }
 
 func (p *mailProvider) Send(mail mail.Mailable, to string) bool {
+	p.log.Info("STARTING Send()")
 	mailTemplate := mail.Build()
 	message, err := p.template.Parse(mailTemplate.TemplatePath, mailTemplate.Context)
 	if err != nil {
-		log.Fatal(err)
+		p.log.Error("Could not parse mail template")
 	}
 
 	if err := p.smtpMail.Send(
@@ -34,9 +34,11 @@ func (p *mailProvider) Send(mail mail.Mailable, to string) bool {
 		},
 		p.config.Password,
 	); err != nil {
+		p.log.Error("Could not send mail")
 		return false
 	}
 
+	p.log.Info("FINISHED Send()")
 	return true
 }
 

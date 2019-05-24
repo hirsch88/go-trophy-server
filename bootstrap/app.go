@@ -84,6 +84,9 @@ func App() *fx.App {
 		*/
 
 		fx.Invoke(routes.APIRoutes),
+		fx.Invoke(func(db providers.DatabaseProvider) {
+			db.Ping()
+		}),
 
 	)
 }
