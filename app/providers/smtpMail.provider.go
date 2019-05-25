@@ -3,7 +3,10 @@ package providers
 import (
 	"crypto/tls"
 	"fmt"
+	"github.com/hirsch88/go-trophy-server/config"
 	"go.uber.org/zap"
+	"net"
+	"net/mail"
 	"net/smtp"
 )
 
@@ -12,93 +15,99 @@ const (
 )
 
 type smtpMailProvider struct {
-	log *zap.SugaredLogger
+	log    *zap.SugaredLogger
+	config *config.MailConfig
 }
 
-type Mail struct {
-	From    string
-	To      string
-	Subject string
-	Body    string
-}
+func (p *smtpMailProvider) Send(to string, subject string, body string) error {
+	from := mail.Address{p.config.Name, p.config.From}
 
-type SmtpServer struct {
-	Host string
-	Port string
-}
+	// Setup headers
+	headers := make(map[string]string)
+	headers["From"] = from.String()
+	headers["To"] = to
+	headers["Subject"] = subject
 
-func (s *SmtpServer) ServerName() string {
-	return s.Host + ":" + s.Port
-}
-
-func (mail *Mail) BuildMessage() string {
+	// Setup message
 	message := ""
-	message += fmt.Sprintf("From: %s\r\n", mail.From)
-	message += fmt.Sprintf("To: %s\r\n", mail.To)
-	message += fmt.Sprintf("Subject: %s\r\n", mail.Subject)
-	message += fmt.Sprintf("%s\r\n", MIME)
-	message += mail.Body
-	return message
-}
+	for k, v := range headers {
+		message += fmt.Sprintf("%s: %s\r\n", k, v)
+	}
+	message += MIME + "\r\n" + body
 
-func (p *smtpMailProvider) Send(smtpServer SmtpServer, mail Mail, password string) error {
-	messageBody := mail.BuildMessage()
-	auth := smtp.PlainAuth("", mail.From, password, smtpServer.Host)
+	// Connect to the SMTP Server
+	servername := p.config.Host + ":" + p.config.Port
+	host, _, _ := net.SplitHostPort(servername)
 
-	tlsConfig := &tls.Config{
+	auth := smtp.PlainAuth("", p.config.From, p.config.Password, host)
+
+	tlsconfig := &tls.Config{
 		InsecureSkipVerify: true,
-		ServerName:         smtpServer.Host,
+		ServerName:         host,
 	}
 
-	// Gmail will reject connection if it's not secure
-	// TLS config
-	conn, err := tls.Dial("tcp", smtpServer.ServerName(), tlsConfig)
+	conn, err := tls.Dial("tcp", servername, tlsconfig)
 	if err != nil {
+		p.log.Error(err)
 		return err
 	}
 
-	client, err := smtp.NewClient(conn, smtpServer.Host)
+	client, err := smtp.NewClient(conn, host)
 	if err != nil {
+		p.log.Error(err)
 		return err
 	}
 
 	// step 1: Use Auth
 	if err = client.Auth(auth); err != nil {
+		p.log.Error(err)
 		return err
 	}
 
 	// step 2: add all from and to
-	if err = client.Mail(mail.From); err != nil {
+	if err = client.Mail(p.config.From); err != nil {
+		p.log.Error(err)
 		return err
 	}
-	if err = client.Rcpt(mail.To); err != nil {
+
+	if err = client.Rcpt(to); err != nil {
+		p.log.Error(err)
 		return err
 	}
 
 	// Data
 	w, err := client.Data()
 	if err != nil {
+		p.log.Error(err)
 		return err
 	}
 
-	_, err = w.Write([]byte(messageBody))
+	_, err = w.Write([]byte(message))
 	if err != nil {
+		p.log.Error(err)
 		return err
 	}
 
 	err = w.Close()
 	if err != nil {
+		p.log.Error(err)
 		return err
 	}
 
-	client.Quit()
+	err = client.Quit()
+	if err != nil {
+		p.log.Error(err)
+		return err
+	}
+
+	p.log.Info("Mail sent successfully")
 	return nil
 }
 
 type SMTPMailProvider interface {
-	Send(smtpServer SmtpServer, mail Mail, password string) error
+	Send(to string, subject string, message string) error
 }
 
-func NewSMTPMailProvider(log *zap.SugaredLogger) SMTPMailProvider {
-	return &smtpMailProvider{log}
+func NewSMTPMailProvider(log *zap.SugaredLogger, config *config.MailConfig) SMTPMailProvider {
+	return &smtpMailProvider{log, config}
 }

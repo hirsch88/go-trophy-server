@@ -21,19 +21,7 @@ func (p *mailProvider) Send(mail mail.Mailable, to string) bool {
 		p.log.Error("Could not parse mail template")
 	}
 
-	if err := p.smtpMail.Send(
-		SmtpServer{
-			Host: p.config.Host,
-			Port: p.config.Port,
-		},
-		Mail{
-			From:    p.config.From,
-			To:      to,
-			Subject: mailTemplate.Subject,
-			Body:    message,
-		},
-		p.config.Password,
-	); err != nil {
+	if err := p.smtpMail.Send(to, mailTemplate.Subject,  message); err != nil {
 		p.log.Error("Could not send mail")
 		return false
 	}

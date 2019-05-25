@@ -31,7 +31,7 @@ func APIRoutes(c RouterContext) {
 			users.POST(
 				"",
 				throttle.Policy(&throttle.Quota{
-					Limit:  1,
+					Limit:  10,
 					Within: time.Hour,
 				}),
 				c.UserController.Create)
